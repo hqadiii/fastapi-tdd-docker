@@ -1,0 +1,4 @@
+# pull official base image
+FROM postgres:17
+
+COPY create.prod.sql /docker-entrypoint-initdb.d
