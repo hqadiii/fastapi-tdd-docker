@@ -17,8 +17,13 @@ services:
         build:
             context: ./project/db
             dockerfile: Dockerfile
+        volumes:
+        - postgres_data:/var/lib/postgresql/data
         expose:
         - 5432
         environment:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
+
+volumes:
+    postgres_data:
