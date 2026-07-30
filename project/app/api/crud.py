@@ -2,6 +2,7 @@ from app.models.pydantic import SummaryPayloadSchema
 from app.models.tortoise import TextSummary
 from typing import Union, List
 
+
 async def post(payload: SummaryPayloadSchema) -> int:
     summary = TextSummary(url=payload.url, summary="dummy summary")
 
