@@ -40,7 +40,7 @@ jobs:
     name: Test Docker Image
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      packages: read
     needs: build
     steps:
       - name: Checkout
@@ -53,14 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Pull image
         run: |
-          docker pull ${{ env.IMAGE }}:latest || true
-      - name: Build image
-        run: |
-          docker build \
-            --cache-from ${{ env.IMAGE }}:latest \
-            --tag ${{ env.IMAGE }}:latest \
-            --file ./project/Dockerfile.prod \
-            "./project"
+          docker pull ${{ env.IMAGE }}:latest
       - name: Run container
         run: |
           docker run \
