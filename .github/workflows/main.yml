@@ -84,4 +84,7 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
       - name: Trigger Coolify deployment
-        run: curl -X GET -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" "${{ secrets.COOLIFY_WEBHOOK_URL }}"
+        run: |
+          curl -X GET \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
+            "${{ secrets.COOLIFY_WEBHOOK_URL }}"
