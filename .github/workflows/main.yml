@@ -75,15 +75,15 @@ jobs:
         run: docker exec fastapi-tdd python -m isort . --check-only
 
   deploy:
-  name: Deploy to Coolify
-  runs-on: ubuntu-latest
-  needs: [build, test]
-  steps:
-    - name: Tailscale
-      uses: tailscale/github-action@v4
-      with:
-        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-    - name: Trigger Coolify deployment
-      run: curl -X GET \
-        -H "Authorization:Bearer ${{ secrets.COOLIFY_TOKEN }}" \
-        "${{ secrets.COOLIFY_WEBHOOK_URL }}"
+    name: Deploy to Coolify
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Trigger Coolify deployment
+        run: curl -X GET \
+          -H "Authorization:Bearer ${{ secrets.COOLIFY_TOKEN }}" \
+          "${{ secrets.COOLIFY_WEBHOOK_URL }}"
