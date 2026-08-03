@@ -3,6 +3,7 @@ import os
 import pytest
 from starlette.testclient import TestClient
 from tortoise.contrib.fastapi import register_tortoise
+from tortoise.contrib.test import truncate_all_models
 
 from app.config import Settings, get_settings
 from app.main import create_application
@@ -21,7 +22,6 @@ def test_app():
 
         # testing
         yield test_client
-
     # tear down
 
 
@@ -41,5 +41,5 @@ def test_app_with_db():
 
         # testing
         yield test_client
-
+        test_client.portal.call(truncate_all_models)
     # tear down

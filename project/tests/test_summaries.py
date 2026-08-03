@@ -1,3 +1,6 @@
+from app.models.tortoise import TextSummary
+
+
 def test_create_summary(test_app_with_db):
     response = test_app_with_db.post("/summaries/", json={"url": "https://foo.bar"})
 
@@ -35,7 +38,8 @@ def test_read_summary(test_app_with_db):
 
 
 def test_read_summary_incorrect_id(test_app_with_db):
-    response = test_app_with_db.get("/summaries/999/")
+    test_app_with_db.portal.call(TextSummary.all().delete)
+    response = test_app_with_db.get("/summaries/1/")
     assert response.status_code == 404
     assert response.json()["detail"] == "Summary not found"
 
@@ -60,7 +64,8 @@ def test_delete_summary(test_app_with_db):
 
 
 def test_delete_summary_incorrect_id(test_app_with_db):
-    response = test_app_with_db.delete("/summaries/999/")
+    test_app_with_db.portal.call(TextSummary.all().delete)
+    response = test_app_with_db.delete("/summaries/1/")
     assert response.status_code == 404
     assert response.json()["detail"] == "Summary not found"
 
@@ -80,8 +85,9 @@ def test_update_summary(test_app_with_db):
 
 
 def test_update_summary_incorrect_id(test_app_with_db):
+    test_app_with_db.portal.call(TextSummary.all().delete)
     payload = {"url": "https://foo.bar", "summary": "updated!"}
-    response = test_app_with_db.put("/summaries/999/", json=payload)
+    response = test_app_with_db.put("/summaries/1/", json=payload)
     assert response.status_code == 404
     assert response.json()["detail"] == "Summary not found"
 
