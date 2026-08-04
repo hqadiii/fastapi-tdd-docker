@@ -17,6 +17,9 @@ RUN apt-get update \
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
+RUN python -m nltk.downloader \
+    -d /usr/local/share/nltk_data \
+    punkt_tab
 
 # add app
 COPY . .
