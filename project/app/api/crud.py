@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from app.models.tortoise import TextSummary
+from app.sumarizer import generate_summary
 
 from app.models.pydantic import (  # isort:skip
     SummaryPayloadSchema,
@@ -9,8 +10,8 @@ from app.models.pydantic import (  # isort:skip
 
 
 async def post(payload: SummaryPayloadSchema) -> int:
-    summary = TextSummary(url=payload.url, summary="dummy summary")
-
+    article_summary = generate_summary(str(payload.url))
+    summary = TextSummary(url=payload.url, summary=article_summary)
     await summary.save()
     return summary.id
 
