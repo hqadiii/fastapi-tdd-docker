@@ -4,7 +4,6 @@ from app.models.tortoise import TextSummary
 
 from app.models.pydantic import (  # isort:skip
     SummaryPayloadSchema,
-    SummaryUpdatePayloadSchema,
 )
 
 
@@ -27,10 +26,8 @@ async def delete(id: int) -> int:
     return await TextSummary.filter(id=id).delete()
 
 
-async def put(id: int, payload: SummaryUpdatePayloadSchema) -> Union[dict, None]:
-    summary = await TextSummary.filter(id=id).update(
-        url=payload.url, summary=payload.summary
-    )
+async def put(id: int, payload: SummaryPayloadSchema) -> Union[dict, None]:
+    summary = await TextSummary.filter(id=id).update(url=payload.url)
     if summary:
         updated_summary = await TextSummary.filter(id=id).first().values()
         return updated_summary

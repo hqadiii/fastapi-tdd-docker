@@ -9,7 +9,6 @@ from app.summarizer import generate_summary
 from app.models.pydantic import (  # isort:skip
     SummaryPayloadSchema,
     SummaryResponseSchema,
-    SummaryUpdatePayloadSchema,
 )
 
 router = APIRouter()
@@ -46,9 +45,12 @@ async def delete_summary(id: int = Path(..., gt=0)):
 
 @router.put("/{id}/", response_model=SummarySchema)
 async def update_summary(
-    payload: SummaryUpdatePayloadSchema, id: int = Path(..., gt=0)
+    payload: SummaryPayloadSchema,
+    background_tasks: BackgroundTasks,
+    id: int = Path(..., gt=0),
 ) -> SummarySchema:
     summary = await crud.put(id, payload)
     if not summary:
         raise HTTPException(status_code=404, detail="Summary not found")
+    background_tasks.add_task(generate_summary, id, str(payload.url))
     return summary

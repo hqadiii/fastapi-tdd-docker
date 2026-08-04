@@ -133,7 +133,7 @@ def test_update_summary(test_app, monkeypatch):
     test_response_payload = {
         "id": 1,
         "url": "https://foo.bar",
-        "summary": "summary",
+        "summary": "updated",
         "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
 
@@ -141,6 +141,11 @@ def test_update_summary(test_app, monkeypatch):
         return test_response_payload
 
     monkeypatch.setattr(crud, "put", mock_put)
+
+    def mock_generate_summary(summary_id, url):
+        return None
+
+    monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
 
     response = test_app.put("/summaries/1/", json=test_request_payload)
     assert response.status_code == 200
@@ -180,25 +185,6 @@ def test_update_summary(test_app, monkeypatch):
                     "loc": ["body", "url"],
                     "msg": "Field required",
                     "input": {},
-                },
-                {
-                    "type": "missing",
-                    "loc": ["body", "summary"],
-                    "msg": "Field required",
-                    "input": {},
-                },
-            ],
-        ],
-        [
-            1,
-            {"url": "https://foo.bar"},
-            422,
-            [
-                {
-                    "type": "missing",
-                    "loc": ["body", "summary"],
-                    "msg": "Field required",
-                    "input": {"url": "https://foo.bar"},
                 }
             ],
         ],

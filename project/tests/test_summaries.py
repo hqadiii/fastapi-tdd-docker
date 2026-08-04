@@ -128,9 +128,15 @@ def test_update_summary(test_app_with_db, monkeypatch):
         return None
 
     monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
+
+    def mock_generate_summary(summary_id, url):
+        return None
+
+    monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
+
     response = test_app_with_db.post("/summaries/", json={"url": "https://foo.bar/"})
     summary_id = response.json()["id"]
-    payload = {"url": "https://foo.bar/", "summary": "updated!"}
+    payload = {"url": "https://foo.bar/", "summary": ""}
     response = test_app_with_db.put(f"/summaries/{summary_id}/", json=payload)
     assert response.status_code == 200
 
@@ -174,25 +180,6 @@ def test_update_summary(test_app_with_db, monkeypatch):
                     "loc": ["body", "url"],
                     "msg": "Field required",
                     "input": {},
-                },
-                {
-                    "type": "missing",
-                    "loc": ["body", "summary"],
-                    "msg": "Field required",
-                    "input": {},
-                },
-            ],
-        ],
-        [
-            1,
-            {"url": "https://foo.bar/"},
-            422,
-            [
-                {
-                    "type": "missing",
-                    "loc": ["body", "summary"],
-                    "msg": "Field required",
-                    "input": {"url": "https://foo.bar/"},
                 }
             ],
         ],
